@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,11 +10,10 @@ public class EnemyPatrolGround : MonoBehaviour
     [SerializeField] private Transform[] _points;
     [SerializeField] private PlayerDetecter _detecterPlayer;
 
-    private float _originalSpeed = 2f;
+    private float _originalSpeed = 1.5f;
     private float _speed;
     private bool _isMovingLeft = true;
     private int _randomIndexPoint;
-    private Coroutine _coroutineSpeed;
     private Rigidbody2D _rigidbodyEnemy;
     private CapsuleCollider2D _colliderEnemy;
     private Health _healthEnemy;
@@ -58,16 +56,6 @@ public class EnemyPatrolGround : MonoBehaviour
         }
     }
 
-    public void OffMoveToHurt()
-    {
-        if (_speed != 0)
-        {
-            _coroutineSpeed = StartCoroutine(StopMoveAfterTakingDamage());
-        }
-
-        StopCoroutine(StopMoveAfterTakingDamage());
-    }
-
     private void Turn()
     {
         float scaleX = 1.5f;
@@ -83,17 +71,6 @@ public class EnemyPatrolGround : MonoBehaviour
         {
             transform.localScale = new Vector3(reverseScaleX, scaleY, scaleZ);
         }
-    }
-
-    private IEnumerator StopMoveAfterTakingDamage()
-    {
-        var delay = 0.25f;
-
-        _speed = 0;
-
-        yield return new WaitForSeconds(delay);
-
-        _speed = _originalSpeed;
     }
 
     private void MoveToPoint()
