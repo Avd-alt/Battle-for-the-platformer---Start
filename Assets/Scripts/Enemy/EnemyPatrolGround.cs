@@ -20,8 +20,8 @@ public class EnemyPatrolGround : MonoBehaviour
     private CapsuleCollider2D _colliderEnemy;
     private Health _healthEnemy;
 
-    public event Action onStayble;
-    public event Action onRun;
+    public event Action stayed;
+    public event Action run;
 
     private void Awake()
     {
@@ -32,12 +32,12 @@ public class EnemyPatrolGround : MonoBehaviour
 
     private void OnEnable()
     {
-        _healthEnemy.onDeath += DisableComponentsAtDeath;
+        _healthEnemy.died += DisableComponentsAtDeath;
     }
 
     private void OnDisable()
     {
-        _healthEnemy.onDeath -= DisableComponentsAtDeath;
+        _healthEnemy.died -= DisableComponentsAtDeath;
     }
 
     private void Start()
@@ -133,7 +133,7 @@ public class EnemyPatrolGround : MonoBehaviour
         {
             _speed = _originalSpeed;
 
-            onRun?.Invoke();
+            run?.Invoke();
 
             transform.position = Vector2.MoveTowards(transform.position, playerHealth.transform.position, _speed * Time.deltaTime);
         }
@@ -143,7 +143,7 @@ public class EnemyPatrolGround : MonoBehaviour
     {
         _speed = 0;
 
-        onStayble?.Invoke();
+        stayed?.Invoke();
     }
 
     private void DisableComponentsAtDeath()

@@ -26,24 +26,24 @@ public class PlayerAnimator : MonoBehaviour
 
     private void OnEnable()
     {
-        _health.onHurt += OnAnimationHurt;
-        _health.onDeath += OnDeathAnimation;
-        _playerMover.onRun += OnRunAnimation;
-        _playerMover.onStopRun += OffRunAnimation;
-        _playerMover.onJump += OnJumpAnimation;
-        _playerMover.onStopJump += OffJumpAnimation;
-        _playerCombat.onAttacked += AttackAnimation;
+        _health.hurt += OnAnimationHurt;
+        _health.died += OnDeathAnimation;
+        _playerMover.run += OnRunAnimation;
+        _playerMover.stoppedRun += OffRunAnimation;
+        _playerMover.jumped += OnJumpAnimation;
+        _playerMover.stoppedJumped += OffJumpAnimation;
+        _playerCombat.attacked += AttackAnimation;
     }
 
     private void OnDisable()
     {
-        _health.onHurt -= OnAnimationHurt;
-        _health.onDeath -= OnDeathAnimation;
-        _playerMover.onRun -= OnRunAnimation;
-        _playerMover.onStopRun -= OffRunAnimation;
-        _playerMover.onJump -= OnJumpAnimation;
-        _playerMover.onStopJump -= OnJumpAnimation;
-        _playerCombat.onAttacked -= AttackAnimation;
+        _health.hurt -= OnAnimationHurt;
+        _health.died -= OnDeathAnimation;
+        _playerMover.run -= OnRunAnimation;
+        _playerMover.stoppedRun -= OffRunAnimation;
+        _playerMover.jumped -= OnJumpAnimation;
+        _playerMover.stoppedJumped -= OnJumpAnimation;
+        _playerCombat.attacked -= AttackAnimation;
     }
 
     private void OnRunAnimation()

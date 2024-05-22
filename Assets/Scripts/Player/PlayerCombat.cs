@@ -13,7 +13,7 @@ public class PlayerCombat : MonoBehaviour
     private float _nextAttackTime = 0;
     private Health _playerHealth;
 
-    public event Action onAttacked;
+    public event Action attacked;
 
     private void Awake()
     {
@@ -22,12 +22,12 @@ public class PlayerCombat : MonoBehaviour
 
     private void OnEnable()
     {
-        _playerHealth.onDeath += DisableComponentAtDeath;
+        _playerHealth.died += DisableComponentAtDeath;
     }
 
     private void OnDisable()
     {
-        _playerHealth.onDeath -= DisableComponentAtDeath;
+        _playerHealth.died -= DisableComponentAtDeath;
     }
 
     private void Update()
@@ -47,7 +47,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void Attack()
     {
-        onAttacked?.Invoke();
+        attacked?.Invoke();
 
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(_attackPoint.position, _attackRange, _enemyLayers);
 

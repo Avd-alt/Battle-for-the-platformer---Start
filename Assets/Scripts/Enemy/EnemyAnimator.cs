@@ -24,20 +24,20 @@ public class EnemyAnimator : MonoBehaviour
 
     private void OnEnable()
     {
-        _enemyHealth.onDeath += OnAnimationDeath;
-        _enemyHealth.onHurt += OnHurtAnimation;
-        _enemyPatrolGround.onStayble += OnAnimationStay;
-        _enemyPatrolGround.onRun += OnAnimationRun;
-        _enemyCombat.onAttacked += OnAnimationAttack;
+        _enemyHealth.died += OnAnimationDeath;
+        _enemyHealth.hurt += OnHurtAnimation;
+        _enemyPatrolGround.stayed += OnAnimationStay;
+        _enemyPatrolGround.run += OnAnimationRun;
+        _enemyCombat.attacked += OnAnimationAttack;
     }
 
     private void OnDisable()
     {
-        _enemyHealth.onDeath -= OnAnimationDeath;
-        _enemyHealth.onHurt -= OnHurtAnimation;
-        _enemyPatrolGround.onStayble -= OnAnimationStay;
-        _enemyPatrolGround.onRun -= OnAnimationRun;
-        _enemyCombat.onAttacked -= OnAnimationAttack;
+        _enemyHealth.died -= OnAnimationDeath;
+        _enemyHealth.hurt -= OnHurtAnimation;
+        _enemyPatrolGround.stayed -= OnAnimationStay;
+        _enemyPatrolGround.run -= OnAnimationRun;
+        _enemyCombat.attacked -= OnAnimationAttack;
     }
 
     public void OnHurtAnimation()

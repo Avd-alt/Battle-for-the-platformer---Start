@@ -13,7 +13,7 @@ public class EnemyCombat : MonoBehaviour
     private float _damage = 15f;
     private Health _health;
 
-    public event Action onAttacked;
+    public event Action attacked;
 
     private void Awake()
     {
@@ -22,12 +22,12 @@ public class EnemyCombat : MonoBehaviour
 
     private void OnEnable()
     {
-        _health.onDeath += DisableComponentAtDeath;
+        _health.died += DisableComponentAtDeath;
     }
 
     private void OnDisable()
     {
-        _health.onDeath -= DisableComponentAtDeath;
+        _health.died -= DisableComponentAtDeath;
     }
 
     private void Update()
@@ -50,7 +50,7 @@ public class EnemyCombat : MonoBehaviour
         {
             if(_damage > 0)
             {
-                onAttacked?.Invoke();
+                attacked?.Invoke();
                 _playerHit.GetComponent<Health>().TakeDamage(_damage);
             }
         }

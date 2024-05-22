@@ -19,7 +19,7 @@ public class CollisionDetecter : MonoBehaviour
 
         if (collision.TryGetComponent(out FirstAidKit firstAidKit))
         {
-            _playerHealth.RestoreHealth(firstAidKit.Heal);
+            _playerHealth.Heal(firstAidKit.Heal);
 
             Destroy(collision.gameObject);
         }

@@ -18,10 +18,10 @@ public class PlayerMover : MonoBehaviour
     private CapsuleCollider2D _colliderPlayer;
     private Rigidbody2D _rigidbody;
 
-    public event Action onRun;
-    public event Action onStopRun;
-    public event Action onJump;
-    public event Action onStopJump;
+    public event Action run;
+    public event Action stoppedRun;
+    public event Action jumped;
+    public event Action stoppedJumped;
 
     private void Awake()
     {
@@ -32,12 +32,12 @@ public class PlayerMover : MonoBehaviour
 
     private void OnEnable()
     {
-        _playerHealth.onDeath += DisableComponentsAtDeath;
+        _playerHealth.died += DisableComponentsAtDeath;
     }
 
     private void OnDisable()
     {
-        _playerHealth.onDeath -= DisableComponentsAtDeath;
+        _playerHealth.died -= DisableComponentsAtDeath;
     }
 
     private void FixedUpdate()
@@ -55,21 +55,21 @@ public class PlayerMover : MonoBehaviour
         if (Input.GetButton(Horizontal))
         {
             Move();
-            onRun?.Invoke();
+            run?.Invoke();
         }
         else
         {
-            onStopRun?.Invoke();
+            stoppedRun?.Invoke();
         }
 
         if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
         {
             _isJump = true;
-            onJump?.Invoke();
+            jumped?.Invoke();
         }
         else
         {
-            onStopJump?.Invoke();
+            stoppedJumped?.Invoke();
         }
     }
 

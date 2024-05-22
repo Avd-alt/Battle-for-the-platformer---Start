@@ -13,12 +13,12 @@ public class PlayerDetecter : MonoBehaviour
 
     private void OnEnable()
     {
-        _healthEnemy.onDeath += DisableComponentAtDeath;
+        _healthEnemy.died += DisableComponentAtDeath;
     }
 
     private void OnDisable()
     {
-        _healthEnemy.onDeath -= DisableComponentAtDeath;
+        _healthEnemy.died -= DisableComponentAtDeath;
         
     }
 
@@ -34,7 +34,7 @@ public class PlayerDetecter : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collider)
     {
-        if (collider.GetComponent<Health>())
+        if (collider.TryGetComponent(out Health playerHealth))
         {
             PlayerHealth = null;
         }

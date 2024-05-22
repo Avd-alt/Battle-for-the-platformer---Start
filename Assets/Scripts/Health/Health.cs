@@ -5,16 +5,17 @@ using UnityEngine.Events;
 
 public class Health : MonoBehaviour
 {
-    private float _health = 100;
+    private float _maxHealth = 100;
+    private float _minHealth = 0;
     private float _currentHealth;
     private Coroutine _destroyCoroutine;
 
-    public event Action onDeath;
-    public event Action onHurt;
+    public event Action died;
+    public event Action hurt;
 
     private void Start()
     {
-        _currentHealth = _health;
+        _currentHealth = _maxHealth;
     }
 
     private void OnDestroy()
@@ -31,7 +32,7 @@ public class Health : MonoBehaviour
         {
             _currentHealth -= damage;
 
-            onHurt?.Invoke();
+            hurt?.Invoke();
 
             if (_currentHealth <= 0)
             {
@@ -40,22 +41,14 @@ public class Health : MonoBehaviour
         }
     }
 
-    public void RestoreHealth(float amountHealthRestore)
+    public void Heal(float amountHealthRestore)
     {
-        if (amountHealthRestore > 0)
-        {
-            _currentHealth += amountHealthRestore;
-
-            if (_currentHealth >= _health)
-            {
-                _currentHealth = _health;
-            }
-        }
+        _currentHealth = Mathf.Clamp(_currentHealth + amountHealthRestore, _minHealth, _maxHealth);
     }
 
     private void Die()
     {
-        onDeath?.Invoke();
+        died?.Invoke();
         _destroyCoroutine = StartCoroutine(DestroyAfterDelay());
     }
 
