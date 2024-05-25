@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
@@ -19,14 +18,7 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetMouseButton(0))
             IsTryingAttack = true;
 
-        if (Input.GetButton(Horizontal))
-        {
-            IsMoving = true;
-        }
-        else
-        {
-            IsMoving = false;
-        }
+        IsMoving = Input.GetButton(Horizontal) ? true : false;
 
         HorizontalDirection = Input.GetAxis(Horizontal);
     }
