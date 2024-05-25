@@ -12,6 +12,7 @@ public static class EnemyAnimatornData
 }
 
 [RequireComponent(typeof(Health), typeof(EnemyPatrolGround), typeof(EnemyCombat))]
+[RequireComponent(typeof(Animator))]
 public class EnemyAnimator : MonoBehaviour
 {
     private Animator _animatorEnemy;

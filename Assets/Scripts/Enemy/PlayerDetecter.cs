@@ -24,9 +24,7 @@ public class PlayerDetecter : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        collider.TryGetComponent(out Health playerHealth);
-
-        if (playerHealth != null)
+        if(collider.TryGetComponent(out Health playerHealth))
         {
             PlayerHealth = playerHealth;
         }

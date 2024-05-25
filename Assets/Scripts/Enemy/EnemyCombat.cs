@@ -9,9 +9,6 @@ public class EnemyCombat : MonoBehaviour
     [SerializeField] private float _attackRange;
     [SerializeField] private LayerMask _playerLayer;
 
-    private float _oneSecondTime = 1f;
-    private float _attackRate = 1f;
-    private float _nextAttackTime = 0;
     private float _damage = 15f;
     private Health _health;
     private Coroutine _coroutineAttack;
@@ -30,7 +27,7 @@ public class EnemyCombat : MonoBehaviour
             StopCoroutine(_coroutineAttack);
         }
 
-        _coroutineAttack = StartCoroutine(AttackCoroutine());
+        _coroutineAttack = StartCoroutine(Attacking());
     }
 
     private void OnEnable()
@@ -57,18 +54,14 @@ public class EnemyCombat : MonoBehaviour
         }
     }
 
-    private IEnumerator AttackCoroutine()
+    private IEnumerator Attacking()
     {
-        _nextAttackTime = Time.time + _oneSecondTime / _attackRate;
-
-        var delay = new WaitForSeconds(_nextAttackTime);
+        float timeToDelay = 1.25f;
+        var delay = new WaitForSeconds(timeToDelay);
 
         while (true)
         {
-            if (Time.time >= _nextAttackTime)
-            {
-                Attack();
-            }
+            Attack();
             yield return delay;
         }
     }
