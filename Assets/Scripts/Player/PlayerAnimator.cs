@@ -1,16 +1,21 @@
 using UnityEngine;
 
+public static class PlayerAnimatornData
+{
+    public static class Params
+    {
+        public static readonly int Run = Animator.StringToHash(nameof(Run));
+        public static readonly int Jump = Animator.StringToHash(nameof(Jump));
+        public static readonly int Attack = Animator.StringToHash(nameof(Attack));
+        public static readonly int Hurt = Animator.StringToHash(nameof(Hurt));
+        public static readonly int IsDead = Animator.StringToHash(nameof(IsDead));
+    }
+}
+
+[RequireComponent(typeof(Health), typeof(PlayerMover), typeof(PlayerCombat))]
 [RequireComponent(typeof(Animator))]
-[RequireComponent (typeof(Health))]
-[RequireComponent (typeof(PlayerMover))]
-[RequireComponent (typeof(PlayerCombat))]
 public class PlayerAnimator : MonoBehaviour
 {
-    private string _run = "Run";
-    private string _jump = "Jump";
-    private string _attack = "Attack";
-    private string _hurt = "Hurt";
-    private string _isDead = "IsDead";
     private Animator _animatorPlayer;
     private Health _health;
     private PlayerMover _playerMover;
@@ -26,58 +31,51 @@ public class PlayerAnimator : MonoBehaviour
 
     private void OnEnable()
     {
-        _health.hurt += OnAnimationHurt;
-        _health.died += OnDeathAnimation;
-        _playerMover.run += OnRunAnimation;
-        _playerMover.stoppedRun += OffRunAnimation;
-        _playerMover.jumped += OnJumpAnimation;
-        _playerMover.stoppedJumped += OffJumpAnimation;
-        _playerCombat.attacked += AttackAnimation;
+        _health.Hurt += OnAnimationHurt;
+        _health.Died += OnDeathAnimation;
+        _playerMover.Run += OnRunAnimation;
+        _playerMover.StoppedRun += OffRunAnimation;
+        _playerMover.Jumped += OnJumpAnimation;
+        _playerCombat.Attacked += AttackAnimation;
     }
 
     private void OnDisable()
     {
-        _health.hurt -= OnAnimationHurt;
-        _health.died -= OnDeathAnimation;
-        _playerMover.run -= OnRunAnimation;
-        _playerMover.stoppedRun -= OffRunAnimation;
-        _playerMover.jumped -= OnJumpAnimation;
-        _playerMover.stoppedJumped -= OnJumpAnimation;
-        _playerCombat.attacked -= AttackAnimation;
+        _health.Hurt -= OnAnimationHurt;
+        _health.Died -= OnDeathAnimation;
+        _playerMover.Run -= OnRunAnimation;
+        _playerMover.StoppedRun -= OffRunAnimation;
+        _playerMover.Jumped -= OnJumpAnimation;
+        _playerCombat.Attacked -= AttackAnimation;
     }
 
     private void OnRunAnimation()
     {
-        _animatorPlayer.SetBool(_run, true);
+        _animatorPlayer.SetBool(PlayerAnimatornData.Params.Run, true);
     }
 
     private void OffRunAnimation()
     {
-        _animatorPlayer.SetBool(_run, false);
+        _animatorPlayer.SetBool(PlayerAnimatornData.Params.Run, false);
     }
 
     private void OnJumpAnimation()
     {
-        _animatorPlayer.SetBool(_jump, true);
-    }
-
-    private void OffJumpAnimation()
-    {
-        _animatorPlayer.SetBool(_jump, false);
+        _animatorPlayer.SetTrigger(PlayerAnimatornData.Params.Jump);
     }
 
     private void AttackAnimation()
     {
-        _animatorPlayer.SetTrigger(_attack);
+        _animatorPlayer.SetTrigger(PlayerAnimatornData.Params.Attack);
     }
 
     private void OnAnimationHurt()
     {
-        _animatorPlayer.SetTrigger(_hurt);
+        _animatorPlayer.SetTrigger(PlayerAnimatornData.Params.Hurt);
     }
 
     private void OnDeathAnimation()
     {
-        _animatorPlayer.SetBool(_isDead, true);
+        _animatorPlayer.SetBool(PlayerAnimatornData.Params.IsDead, true);
     }
 }

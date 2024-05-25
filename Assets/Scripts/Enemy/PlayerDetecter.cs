@@ -13,12 +13,12 @@ public class PlayerDetecter : MonoBehaviour
 
     private void OnEnable()
     {
-        _healthEnemy.died += DisableComponentAtDeath;
+        _healthEnemy.Died += DisableComponentAtDeath;
     }
 
     private void OnDisable()
     {
-        _healthEnemy.died -= DisableComponentAtDeath;
+        _healthEnemy.Died -= DisableComponentAtDeath;
         
     }
 

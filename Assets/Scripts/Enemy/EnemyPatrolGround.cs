@@ -2,9 +2,7 @@ using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-[RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent (typeof(CapsuleCollider2D))]
-[RequireComponent(typeof(Health))]
+[RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D), typeof(Health))]
 public class EnemyPatrolGround : MonoBehaviour
 {
     [SerializeField] private Transform[] _points;
@@ -18,8 +16,8 @@ public class EnemyPatrolGround : MonoBehaviour
     private CapsuleCollider2D _colliderEnemy;
     private Health _healthEnemy;
 
-    public event Action stayed;
-    public event Action run;
+    public event Action Stayed;
+    public event Action Run;
 
     private void Awake()
     {
@@ -30,12 +28,12 @@ public class EnemyPatrolGround : MonoBehaviour
 
     private void OnEnable()
     {
-        _healthEnemy.died += DisableComponentsAtDeath;
+        _healthEnemy.Died += DisableComponentsAtDeath;
     }
 
     private void OnDisable()
     {
-        _healthEnemy.died -= DisableComponentsAtDeath;
+        _healthEnemy.Died -= DisableComponentsAtDeath;
     }
 
     private void Start()
@@ -110,7 +108,7 @@ public class EnemyPatrolGround : MonoBehaviour
         {
             _speed = _originalSpeed;
 
-            run?.Invoke();
+            Run?.Invoke();
 
             transform.position = Vector2.MoveTowards(transform.position, playerHealth.transform.position, _speed * Time.deltaTime);
         }
@@ -120,7 +118,7 @@ public class EnemyPatrolGround : MonoBehaviour
     {
         _speed = 0;
 
-        stayed?.Invoke();
+        Stayed?.Invoke();
     }
 
     private void DisableComponentsAtDeath()

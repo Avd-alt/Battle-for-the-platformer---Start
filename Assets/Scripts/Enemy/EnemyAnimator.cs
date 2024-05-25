@@ -1,14 +1,19 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Health))]
-[RequireComponent(typeof(EnemyPatrolGround))]
-[RequireComponent (typeof(EnemyCombat))]
+public static class EnemyAnimatornData
+{
+    public static class Params
+    {
+        public static readonly int Hurt = Animator.StringToHash(nameof(Hurt));
+        public static readonly int IsDead = Animator.StringToHash(nameof(IsDead));
+        public static readonly int Attack = Animator.StringToHash(nameof(Attack));
+        public static readonly int IsStay = Animator.StringToHash(nameof(IsStay));
+    }
+}
+
+[RequireComponent(typeof(Health), typeof(EnemyPatrolGround), typeof(EnemyCombat))]
 public class EnemyAnimator : MonoBehaviour
 {
-    private string _hurt = "Hurt";
-    private string _death = "IsDead";
-    private string _attack = "Attack";
-    private string _isStay = "IsStay";
     private Animator _animatorEnemy;
     private Health _enemyHealth;
     private EnemyPatrolGround _enemyPatrolGround;
@@ -24,44 +29,44 @@ public class EnemyAnimator : MonoBehaviour
 
     private void OnEnable()
     {
-        _enemyHealth.died += OnAnimationDeath;
-        _enemyHealth.hurt += OnHurtAnimation;
-        _enemyPatrolGround.stayed += OnAnimationStay;
-        _enemyPatrolGround.run += OnAnimationRun;
-        _enemyCombat.attacked += OnAnimationAttack;
+        _enemyHealth.Died += OnAnimationDeath;
+        _enemyHealth.Hurt += OnHurtAnimation;
+        _enemyPatrolGround.Stayed += OnAnimationStay;
+        _enemyPatrolGround.Run += OnAnimationRun;
+        _enemyCombat.Attacked += OnAnimationAttack;
     }
 
     private void OnDisable()
     {
-        _enemyHealth.died -= OnAnimationDeath;
-        _enemyHealth.hurt -= OnHurtAnimation;
-        _enemyPatrolGround.stayed -= OnAnimationStay;
-        _enemyPatrolGround.run -= OnAnimationRun;
-        _enemyCombat.attacked -= OnAnimationAttack;
+        _enemyHealth.Died -= OnAnimationDeath;
+        _enemyHealth.Hurt -= OnHurtAnimation;
+        _enemyPatrolGround.Stayed -= OnAnimationStay;
+        _enemyPatrolGround.Run -= OnAnimationRun;
+        _enemyCombat.Attacked -= OnAnimationAttack;
     }
 
     public void OnHurtAnimation()
     {
-        _animatorEnemy.SetTrigger(_hurt);
+        _animatorEnemy.SetTrigger(EnemyAnimatornData.Params.Hurt);
     }
 
     public void OnAnimationDeath()
     {
-        _animatorEnemy.SetBool(_death, true);
+        _animatorEnemy.SetBool(EnemyAnimatornData.Params.IsDead, true);
     }
 
     public void OnAnimationAttack()
     {
-        _animatorEnemy.SetTrigger(_attack);
+        _animatorEnemy.SetTrigger(EnemyAnimatornData.Params.Attack);
     }
 
     public void OnAnimationStay()
     {
-        _animatorEnemy.SetBool(_isStay, true);
+        _animatorEnemy.SetBool(EnemyAnimatornData.Params.IsStay, true);
     }
 
     public void OnAnimationRun()
     {
-        _animatorEnemy?.SetBool(_isStay, false);
+        _animatorEnemy?.SetBool(EnemyAnimatornData.Params.IsStay, false);
     }
 }

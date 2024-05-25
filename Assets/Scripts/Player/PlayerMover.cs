@@ -1,9 +1,8 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(Health))]
-[RequireComponent(typeof(CapsuleCollider2D))]
+[RequireComponent(typeof(Rigidbody2D), typeof(Health), typeof(CapsuleCollider2D))]
+[RequireComponent (typeof(PlayerInput))]
 public class PlayerMover : MonoBehaviour
 {
     public const string Horizontal = nameof(Horizontal);
@@ -13,18 +12,18 @@ public class PlayerMover : MonoBehaviour
 
     private float _currentRotation = 0;
     private bool _isGrounded = false;
-    private bool _isJump = false;
     private Health _playerHealth;
     private CapsuleCollider2D _colliderPlayer;
     private Rigidbody2D _rigidbody;
+    private PlayerInput _playerInput;
 
-    public event Action run;
-    public event Action stoppedRun;
-    public event Action jumped;
-    public event Action stoppedJumped;
+    public event Action Run;
+    public event Action StoppedRun;
+    public event Action Jumped;
 
     private void Awake()
     {
+        _playerInput = GetComponent<PlayerInput>();
         _playerHealth = GetComponent<Health>();
         _rigidbody = GetComponent<Rigidbody2D>();
         _colliderPlayer = GetComponent<CapsuleCollider2D>();
@@ -32,50 +31,44 @@ public class PlayerMover : MonoBehaviour
 
     private void OnEnable()
     {
-        _playerHealth.died += DisableComponentsAtDeath;
+        _playerHealth.Died += DisableComponentsAtDeath;
     }
 
     private void OnDisable()
     {
-        _playerHealth.died -= DisableComponentsAtDeath;
+        _playerHealth.Died -= DisableComponentsAtDeath;
     }
 
     private void FixedUpdate()
     {
-        if (_isJump)
+        if (_playerInput.IsTryingJump)
         {
             Jump();
+
             _isGrounded = false;
-            _isJump = false;
         }
+
+        _playerInput.DeActivateJumpTrying();
     }
 
     private void Update()
     {
-        if (Input.GetButton(Horizontal))
+        if(_playerInput.IsMoving)
         {
             Move();
-            run?.Invoke();
+            Run?.Invoke();
         }
         else
         {
-            stoppedRun?.Invoke();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
-        {
-            _isJump = true;
-            jumped?.Invoke();
-        }
-        else
-        {
-            stoppedJumped?.Invoke();
+            StoppedRun?.Invoke();
         }
     }
 
     private void Move()
     {
-        Vector3 direction = Vector3.right * Input.GetAxis(Horizontal);
+        Run?.Invoke();
+
+        Vector3 direction = Vector3.right * _playerInput.HorizontalDirection;
 
         transform.position += direction * _speed * Time.deltaTime;
 
@@ -88,7 +81,11 @@ public class PlayerMover : MonoBehaviour
 
     private void Jump()
     {
-        _rigidbody.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
+        if(_isGrounded)
+        {
+            _rigidbody.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
+            Jumped?.Invoke();
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

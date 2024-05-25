@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Health : MonoBehaviour
 {
@@ -10,8 +9,8 @@ public class Health : MonoBehaviour
     private float _currentHealth;
     private Coroutine _destroyCoroutine;
 
-    public event Action died;
-    public event Action hurt;
+    public event Action Died;
+    public event Action Hurt;
 
     private void Start()
     {
@@ -30,11 +29,11 @@ public class Health : MonoBehaviour
     {
         if(damage > 0)
         {
-            _currentHealth -= damage;
+            _currentHealth = Mathf.Clamp(_currentHealth - damage, _minHealth, _maxHealth);
 
-            hurt?.Invoke();
+            Hurt?.Invoke();
 
-            if (_currentHealth <= 0)
+            if(_currentHealth == _minHealth)
             {
                 Die();
             }
@@ -48,7 +47,7 @@ public class Health : MonoBehaviour
 
     private void Die()
     {
-        died?.Invoke();
+        Died?.Invoke();
         _destroyCoroutine = StartCoroutine(DestroyAfterDelay());
     }
 

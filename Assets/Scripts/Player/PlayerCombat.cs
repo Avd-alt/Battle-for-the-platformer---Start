@@ -1,53 +1,57 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(Health))]
+[RequireComponent(typeof(Health), typeof(PlayerInput))]
 public class PlayerCombat : MonoBehaviour
 {
     [SerializeField] private Transform _attackPoint;
     [SerializeField] private float _attackRange;
     [SerializeField] private LayerMask _enemyLayers;
 
+    private float _oneSecondTime = 1f;
     private int _attackDamage = 20;
     private float _attackRate = 1f;
     private float _nextAttackTime = 0;
     private Health _playerHealth;
+    private PlayerInput _playerInput;
 
-    public event Action attacked;
+    public event Action Attacked;
 
     private void Awake()
     {
         _playerHealth = GetComponent<Health>();
+        _playerInput = GetComponent<PlayerInput>();
     }
 
     private void OnEnable()
     {
-        _playerHealth.died += DisableComponentAtDeath;
+        _playerHealth.Died += DisableComponentAtDeath;
     }
 
     private void OnDisable()
     {
-        _playerHealth.died -= DisableComponentAtDeath;
+        _playerHealth.Died -= DisableComponentAtDeath;
     }
 
     private void Update()
     {
-        float oneSecondTime = 1f;
-
         if(Time.time >= _nextAttackTime)
         {
-            if (Input.GetKeyUp(KeyCode.Mouse0))
+            if (_playerInput.IsTryingAttack)
             {
                 Attack();
 
-                _nextAttackTime = Time.time + oneSecondTime/ _attackRate;
+                _nextAttackTime = Time.time + _oneSecondTime/ _attackRate;
             }
         }
+
+        _playerInput.DeActivateAttackTrying();
     }
 
     private void Attack()
     {
-        attacked?.Invoke();
+        Attacked?.Invoke();
 
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(_attackPoint.position, _attackRange, _enemyLayers);
 
@@ -60,6 +64,19 @@ public class PlayerCombat : MonoBehaviour
                     enemy.GetComponent<Health>().TakeDamage(_attackDamage);
                 }
             }
+        }
+    }
+
+    private IEnumerator AttackCoroutine()
+    {
+        while (true)
+        {
+            if (Time.time >= _nextAttackTime)
+            {
+                Attack();
+                _nextAttackTime = Time.time + _oneSecondTime / _attackRate;
+            }
+            yield return null;
         }
     }
 
